@@ -1,9 +1,10 @@
-package Objetos.entidades;
+package model.entity;
 
 import java.util.ArrayList;
 
 
 public class Usuario{
+    private int id;
     private String nome;
     private String documento;
     private String data_nascimento;
@@ -21,6 +22,24 @@ public class Usuario{
 
     public Usuario(){
         
+    }
+
+    
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getData_nascimento() {
+        return data_nascimento;
+    }
+
+    public void setData_nascimento(String data_nascimento) {
+        this.data_nascimento = data_nascimento;
     }
 
     public String getNome() {

@@ -1,10 +1,11 @@
-package Objetos.entidades.entidades_DAO;
+package model.entity.entidades_DAO;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import Objetos.entidades.Usuario;
+
 import model.entity.ConectaBD;
+import model.entity.Usuario;
 
 public class UsuarioDAO {
 

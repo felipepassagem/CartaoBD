@@ -3,12 +3,15 @@ import java.sql.SQLException;
 import java.time.chrono.IsoChronology;
 import java.util.Scanner;
 
-import Objetos.entidades.Usuario;
-import Objetos.entidades.entidades_DAO.UsuarioDAO;
+
 
 import java.sql.PreparedStatement;
 
+import model.entity.Cartao;
 import model.entity.ConectaBD;
+import model.entity.Usuario;
+import model.entity.entidades_DAO.CartaoDAO;
+import model.entity.entidades_DAO.UsuarioDAO;
 
 public class App {
 
@@ -60,7 +63,7 @@ public class App {
                 System.out.println("\nSelecione o usuário pelo número: ");
                 while (!teclado.hasNextInt()) {
                     System.out.println("Valor inserido não foi um número. Escolha novamente:");
-                    teclado.next(); // Limpa o valor inválido do scanner
+                    teclado.next(); 
                 }
                 int index_usuario = teclado.nextInt();
 
@@ -68,7 +71,7 @@ public class App {
                     System.out.println("Usuário inválido. Escolha novamente:");
                     while (!teclado.hasNextInt()) {
                         System.out.println("Valor inserido não foi um número. Escolha novamente:");
-                        teclado.next(); // Limpa o valor inválido do scanner
+                        teclado.next(); 
                     }
                     index_usuario = teclado.nextInt();
                 }
@@ -152,6 +155,35 @@ public class App {
 
     }
 
+    public static void metodoGerarCartao(int user_id){
+        Scanner teclado = new Scanner(System.in);
+        CartaoDAO cDAO = new CartaoDAO();
+
+        System.out.println("Limite do cartão: ");
+        Double limite_credito = teclado.nextDouble();
+        boolean criado = cDAO.gerarCartaoParaUsuario(user_id, limite_credito);
+
+        if(criado) {
+            System.out.println("Cartão gerado com sucesso.");
+        }
+
+    }
+
+    public static void metodoRealizarTransacao(int user_id){
+        Scanner teclado = new Scanner(System.in);
+        CartaoDAO cDAO = new CartaoDAO();
+
+        System.out.println("Quanto você deseja transferir?");
+        double valorTransacao = teclado.nextDouble();
+
+        System.out.println("Para quem você deseja transferir?");
+        String recebedor = teclado.next();
+
+        cDAO.realizarTransacao(user_id, valorTransacao, recebedor);
+
+
+    }
+
     public static void main(String[] args) throws Exception {
         boolean is_primeiro_usuario = getNumeroUsuarios() > 0 ? false : true;
         int user_id = 0;
@@ -176,11 +208,12 @@ public class App {
 
                 case 2: {
                     System.out.println(user_id);
-
+                    metodoGerarCartao(user_id);
                     break;
                 }
                 case 3: {
                     // realizar transacoes
+                    metodoRealizarTransacao(user_id);
                     break;
                 }
 
