@@ -65,7 +65,7 @@ public class CartaoDAO {
             if (res.next()) {
                 Cartao cartao = new Cartao(id_usuario, num_cartao, data_validade, limite_credito);
                 cartao.setTipo("credito");
-                sql = "INSERT INTO cartao (id_usuario, num_cartao, data_validade, limite_credito, tipo) VALUES (?,?,?,?,?)";
+                sql = "INSERT INTO cartao (id_usuario, num_cartao, data_validade, limite_credito, tipo, limite_utilizado) VALUES (?,?,?,?,?,0)";
                 PreparedStatement pst2 = con.getConexao().prepareStatement(sql);
                 pst2.setInt(1, id_usuario);
 
@@ -197,6 +197,37 @@ public class CartaoDAO {
             return -1;
         }
         return -1;
+
+    }
+
+    public int consultarSaldo(int id_usuario) {
+        ConectaBD con = new ConectaBD();
+
+        String sql = "Select num_cartao, limite_credito, limite_utilizado from cartao where id_usuario = ?";
+
+        try {
+            PreparedStatement pst = con.getConexao().prepareStatement(sql);
+            pst.setInt(1, id_usuario);
+
+            ResultSet res = pst.executeQuery();
+            int i = 1;
+            if(!res.isBeforeFirst()){
+                System.out.println("Nenhum saldo a consultar.");
+                return -1;
+            }
+            
+            while(res.next()){
+                System.out.println(i + "- N cartão: " +res.getString("num_cartao") + "| Saldo: " + (res.getDouble("limite_credito") - res.getDouble("limite_utilizado")) + " | Limite: " + res.getDouble("limite_credito"));
+                i++;
+            }
+            return 0;
+
+
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return -1;
+        }
 
     }
 

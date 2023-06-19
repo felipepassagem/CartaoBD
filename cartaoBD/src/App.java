@@ -3,8 +3,6 @@ import java.sql.SQLException;
 import java.time.chrono.IsoChronology;
 import java.util.Scanner;
 
-
-
 import java.sql.PreparedStatement;
 
 import model.entity.Cartao;
@@ -23,21 +21,20 @@ public class App {
             return teclado.nextInt();
         } else {
             Scanner teclado = new Scanner(System.in);
-        System.out.println("-----MENU-----");
-        System.out.println("1- Cadstrar usuário.");
-        System.out.println("2- Gerar cartão para usuário.");
-        System.out.println("3- Realizar transações.");
-        System.out.println("4- Efetuar pagamentos.");
-        System.out.println("5- Consultar saldo.");
-        System.out.println("6- Listar cartões do usuario.");
-        System.out.println("7- Consultar Log de transações.");
-        System.out.println("8- Escolher usuário.");
-        System.out.println("9- Sair");
-        System.out.print("Digite: ");
-        return teclado.nextInt();
+            System.out.println("-----MENU-----");
+            System.out.println("1- Cadstrar usuário.");
+            System.out.println("2- Gerar cartão para usuário.");
+            System.out.println("3- Realizar transações.");
+            System.out.println("4- Efetuar pagamentos.");
+            System.out.println("5- Consultar saldo.");
+            System.out.println("6- Listar cartões do usuario.");
+            System.out.println("7- Consultar Log de transações.");
+            System.out.println("8- Escolher usuário.");
+            System.out.println("9- Sair");
+            System.out.print("Digite: ");
+            return teclado.nextInt();
         }
 
-        
     }
 
     public static int metodoSelecionarUsuario() {
@@ -53,7 +50,7 @@ public class App {
             PreparedStatement pst = con.getConexao().prepareStatement(sql);
             ResultSet res = pst.executeQuery();
             System.out.println("Usuários cadastrados: ");
-            
+
             while (res.next()) {
                 System.out.println(i + " - " + res.getString("nome"));
                 i++;
@@ -63,7 +60,7 @@ public class App {
                 System.out.println("\nSelecione o usuário pelo número: ");
                 while (!teclado.hasNextInt()) {
                     System.out.println("Valor inserido não foi um número. Escolha novamente:");
-                    teclado.next(); 
+                    teclado.next();
                 }
                 int index_usuario = teclado.nextInt();
 
@@ -71,20 +68,20 @@ public class App {
                     System.out.println("Usuário inválido. Escolha novamente:");
                     while (!teclado.hasNextInt()) {
                         System.out.println("Valor inserido não foi um número. Escolha novamente:");
-                        teclado.next(); 
+                        teclado.next();
                     }
                     index_usuario = teclado.nextInt();
                 }
                 ResultSet res2 = pst.executeQuery();
                 int j = 0;
 
-                while(res2.next()){
-                    if (index_usuario - 1 == j){
+                while (res2.next()) {
+                    if (index_usuario - 1 == j) {
                         id_usuario = res2.getInt("id");
                     }
                     j++;
                 }
-                
+
                 sql = "SELECT id from usuario where id = ?;";
                 PreparedStatement pst2 = con.getConexao().prepareStatement(sql);
 
@@ -125,10 +122,10 @@ public class App {
         return i;
     }
 
-    public static void metodoCadastrarUsuario(){
+    public static void metodoCadastrarUsuario() {
         Scanner teclado = new Scanner(System.in);
         UsuarioDAO uDAO = new UsuarioDAO();
-        
+
         System.out.println("Nome do novo usuário: ");
         String nome = teclado.next();
         System.out.println("Documento do novo usuário: ");
@@ -152,10 +149,9 @@ public class App {
     public static void metodoEscolherUsuario() {
         Scanner teclado = new Scanner(System.in);
 
-
     }
 
-    public static void metodoGerarCartao(int user_id){
+    public static void metodoGerarCartao(int user_id) {
         Scanner teclado = new Scanner(System.in);
         CartaoDAO cDAO = new CartaoDAO();
 
@@ -163,13 +159,13 @@ public class App {
         Double limite_credito = teclado.nextDouble();
         boolean criado = cDAO.gerarCartaoParaUsuario(user_id, limite_credito);
 
-        if(criado) {
+        if (criado) {
             System.out.println("Cartão gerado com sucesso.");
         }
 
     }
 
-    public static void metodoRealizarTransacao(int user_id){
+    public static void metodoRealizarTransacao(int user_id) {
         Scanner teclado = new Scanner(System.in);
         CartaoDAO cDAO = new CartaoDAO();
 
@@ -181,6 +177,16 @@ public class App {
 
         cDAO.realizarTransacao(user_id, valorTransacao, recebedor);
 
+    }
+
+    private static void metodoConsultarSaldo(int id_usuario){
+        CartaoDAO cDAO = new CartaoDAO();
+        cDAO.consultarSaldo(id_usuario);
+    }
+
+    private static void metodoListarCartoes(int id_usuario){
+        UsuarioDAO uDAO = new UsuarioDAO();
+        uDAO.listarCartoes(id_usuario);
 
     }
 
@@ -191,14 +197,14 @@ public class App {
         System.out.println("\nSISTEMA DE CARTÃO DE CRÉDITO\n");
         do {
             is_primeiro_usuario = getNumeroUsuarios() > 0 ? false : true;
-            
+
             if (is_primeiro_usuario == false && user_id == 0) {
                 user_id = metodoSelecionarUsuario();
 
             }
-           
+
             op = menu(is_primeiro_usuario);
-          
+
             switch (op) {
                 case 1: {
                     // Cadastar usuario
@@ -224,12 +230,14 @@ public class App {
                 }
                 case 5: {
                     // consultar saldo
+                    metodoConsultarSaldo(user_id);
                     break;
 
                 }
 
                 case 6: {
                     // listar cartoes
+                    metodoListarCartoes(user_id);
                     break;
                 }
                 case 7: {
