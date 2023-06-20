@@ -122,7 +122,7 @@ public class App {
         return i;
     }
 
-    public static void metodoCadastrarUsuario() {
+    public static void metodoCadastrarUsuario(int user_id) {
         Scanner teclado = new Scanner(System.in);
         UsuarioDAO uDAO = new UsuarioDAO();
 
@@ -139,7 +139,7 @@ public class App {
 
         try {
             Usuario u = new Usuario(nome, documento, data_nascimento, genero, telefone);
-            uDAO.cadastrasUsuario(u);
+            uDAO.cadastrasUsuario(u, user_id);
         } catch (Exception e) {
             // TODO: handle exception
         }
@@ -190,6 +190,20 @@ public class App {
 
     }
 
+    private static void metodoEfetuarPagamento(int id_usuario){
+        Scanner teclado = new Scanner(System.in);
+        CartaoDAO cDAO = new CartaoDAO();
+
+        System.out.println("Quanto você deseja transferir?");
+        double valorTransacao = teclado.nextDouble();
+
+        System.out.println("Para quem você deseja fazer o pagamento?");
+        String recebedor = teclado.next();
+
+        cDAO.realizarTransacao(id_usuario, valorTransacao, recebedor);
+
+    }
+
     public static void main(String[] args) throws Exception {
         boolean is_primeiro_usuario = getNumeroUsuarios() > 0 ? false : true;
         int user_id = 0;
@@ -208,7 +222,7 @@ public class App {
             switch (op) {
                 case 1: {
                     // Cadastar usuario
-                    metodoCadastrarUsuario();
+                    metodoCadastrarUsuario(user_id);
                     break;
                 }
 
@@ -225,6 +239,7 @@ public class App {
 
                 case 4: {
                     // efetuar pagamento
+                    metodoEfetuarPagamento(user_id);
                     break;
 
                 }

@@ -3,14 +3,21 @@ package model.entity.entidades_DAO;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import model.entity.ConectaBD;
 import model.entity.Usuario;
 
 public class UsuarioDAO {
 
-    public void cadastrasUsuario(Usuario u){
+    public static String getDataAtual() {
+        LocalDate dataAtual = LocalDate.now();
+        DateTimeFormatter formato = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return dataAtual.format(formato);
+    }
+
+    public void cadastrasUsuario(Usuario u, int user_id){
         ConectaBD con = new ConectaBD();
         con.getConexao();
 
@@ -26,7 +33,22 @@ public class UsuarioDAO {
             pst.execute();
             System.out.println("Usuário cadastrado com sucesso.");
             //INSERIR CADASTRO NO LOG
+            String log = "Insert into log (id_usuario, log) Values (" + user_id + ", '" + getDataAtual() + " - ID: " + user_id + " | Cadastro de usuario - sucesso');";
+            pst = con.getConexao().prepareStatement(log);
+            pst.execute();
+
         } catch (SQLException e) {
+            String log = "Insert into log (id_usuario, log) Values (" + user_id + ", '" + getDataAtual() + " - ID: " + user_id + " | Cadastro de usuario - fracasso');";
+            
+            try {
+                PreparedStatement pst  = con.getConexao().prepareStatement(log);
+                pst = con.getConexao().prepareStatement(log);
+                pst.execute();
+            } catch (SQLException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
+            
             // TODO Auto-generated catch block
             e.printStackTrace();
             //INSERIR FALHA NO LOG
@@ -54,6 +76,10 @@ public class UsuarioDAO {
                     System.out.println(i + "- " + res.getString("num_cartao"));
                     
                 }
+                String log = "Insert into log (id_usuario, log) Values (" + id_usuario + ", '" + getDataAtual() + " - ID: " + id_usuario + " | Solicitação de listagem de cartoes');";
+                System.out.println(log);
+                pst = con.getConexao().prepareStatement(log);
+                pst.execute();
                 return 0;
             }
             
