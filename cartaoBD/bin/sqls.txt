@@ -1,0 +1,59 @@
+--sqls usados na criação do banco
+
+CREATE DATABASE cartaoDB;
+
+CREATE TABLE Usuario (
+  id integer primary KEY auto_increment,
+  nome varchar(150),
+  documento varchar(150),
+  genero varchar(150),
+  telefone varchar(150),
+  dataNascimento date
+);
+
+CREATE TABLE Cartao (
+  id integer primary KEY auto_increment,
+  id_usuario integer,
+  documento varchar(150),
+  num_cartao varchar(150),
+  data_validade date,
+  limite_credito float,
+  is_credito boolean,
+  foreign key (id_usuario) references Usuario(id)
+);
+
+ALTER TABLE cartao
+RENAME COLUMN is_credito to tipo;
+
+
+ALTER TABLE cartao
+MODIFY COLUMN tipo VARCHAR(50);
+
+ALTER TABLE cartao
+ADD limite_utilizado DOUBLE;
+
+
+
+CREATE TABLE Transacao (
+  id integer primary KEY auto_increment,
+  id_cartao integer,
+  id_usuario integer,
+  recebedor varchar(150),
+  data_transacao date,
+  is_credito boolean,
+  foreign key (id_cartao) references Cartao(id),
+  foreign key (id_usuario) references Usuario(id)
+);
+
+ALTER TABLE transacao
+RENAME COLUMN is_credito to tipo;
+
+ALTER TABLE transacao
+MODIFY COLUMN tipo VARCHAR(50);
+
+CREATE TABLE Log (
+  id integer primary KEY auto_increment,
+  id_usuario integer,
+  log VARCHAR(2000),
+  foreign key (id_usuario) references Usuario(id)
+);
